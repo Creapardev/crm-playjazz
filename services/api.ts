@@ -2,6 +2,27 @@ import { Lead, Student, Payment, SystemConfig } from '../types';
 
 const API_BASE = '/api';
 
+async function fetchWithRetry(url: string, options?: RequestInit, retries = 3, delay = 1000): Promise<Response> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return response;
+      if (response.status >= 500 && i < retries - 1) {
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      return response;
+    } catch (error) {
+      if (i < retries - 1) {
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      throw error;
+    }
+  }
+  return fetch(url, options);
+}
+
 const statusMapping = {
   'Novo Lead': 'NEW',
   'Contato Feito': 'CONTACTED',
@@ -93,7 +114,7 @@ function mapPaymentFromDb(payment: any): Payment {
 export const api = {
   getLeads: async (unitId?: string): Promise<Lead[]> => {
     const url = unitId ? `${API_BASE}/leads?unitId=${unitId}` : `${API_BASE}/leads`;
-    const response = await fetch(url);
+    const response = await fetchWithRetry(url);
     const data = await response.json();
     return data.map(mapLeadFromDb);
   },
@@ -124,7 +145,7 @@ export const api = {
 
   getStudents: async (unitId?: string): Promise<Student[]> => {
     const url = unitId ? `${API_BASE}/students?unitId=${unitId}` : `${API_BASE}/students`;
-    const response = await fetch(url);
+    const response = await fetchWithRetry(url);
     const data = await response.json();
     return data.map(mapStudentFromDb);
   },
@@ -154,18 +175,18 @@ export const api = {
 
   getPayments: async (unitId?: string): Promise<Payment[]> => {
     const url = unitId ? `${API_BASE}/payments?unitId=${unitId}` : `${API_BASE}/payments`;
-    const response = await fetch(url);
+    const response = await fetchWithRetry(url);
     const data = await response.json();
     return data.map(mapPaymentFromDb);
   },
 
   getUsers: async () => {
-    const response = await fetch(`${API_BASE}/users`);
+    const response = await fetchWithRetry(`${API_BASE}/users`);
     return response.json();
   },
 
   getConfig: async (): Promise<SystemConfig> => {
-    const response = await fetch(`${API_BASE}/config`);
+    const response = await fetchWithRetry(`${API_BASE}/config`);
     return response.json();
   },
 

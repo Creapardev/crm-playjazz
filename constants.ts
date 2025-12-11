@@ -1,8 +1,8 @@
 import { Lead, LeadStatus, Payment, PaymentStatus, Student, Unit, LogType, User, SystemConfig } from "./types";
 
 export const UNITS: Unit[] = [
-    { id: 'u1', name: 'PlayJazz Centro' },
-    { id: 'u2', name: 'PlayJazz Zona Sul' }
+    { id: '1', name: 'PlayJazz Centro' },
+    { id: '2', name: 'PlayJazz Zona Sul' }
 ];
 
 export const MOCK_USERS: User[] = [

@@ -95,8 +95,10 @@ export function registerRoutes(app: Express): Router {
 
   router.delete("/api/students/:id", async (req, res) => {
     try {
-      await db.delete(timelineLogs).where(eq(timelineLogs.studentId, parseInt(req.params.id)));
-      await db.delete(students).where(eq(students.id, parseInt(req.params.id)));
+      const studentId = parseInt(req.params.id);
+      await db.delete(payments).where(eq(payments.studentId, studentId));
+      await db.delete(timelineLogs).where(eq(timelineLogs.studentId, studentId));
+      await db.delete(students).where(eq(students.id, studentId));
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete student" });

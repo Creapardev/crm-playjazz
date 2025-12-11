@@ -125,7 +125,7 @@ const SalesCRM: React.FC<SalesCRMProps> = ({ leads, currentUnitId, onUpdateLead,
                         }}
                         className="w-full text-[10px] bg-slate-800 text-white py-1 rounded hover:bg-slate-700"
                         >
-                        Avançar >
+                        Avançar {'>'}
                         </button>
                 </div>
             )}

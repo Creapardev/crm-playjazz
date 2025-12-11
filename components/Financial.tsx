@@ -72,7 +72,7 @@ const Financial: React.FC<FinancialProps> = ({ payments, students }) => {
                         <Send className="w-3 h-3" /> Log de Execução (Simulado)
                     </p>
                     {automationLog.map((log, idx) => (
-                        <div key={idx} className="mb-1">> {log}</div>
+                        <div key={idx} className="mb-1">{'>'} {log}</div>
                     ))}
                 </div>
             )}
